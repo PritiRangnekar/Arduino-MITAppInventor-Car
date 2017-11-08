@@ -1,0 +1,181 @@
+/**Goal: setup app-controlled car that can move using Arduino and servo-based directions.
+*import code and hardware setup from libraries.
+*/
+#include <Servo.h>
+#include <SoftwareSerial.h>
+#define BT_TX 2
+#define BT_RX 3
+SoftwareSerial BTserial(BT_RX, BT_TX); // RX | TX
+
+char c = ' ';
+
+/**Set up variables to control the speed and direction of the car using pins on the Arduino board.
+int speedPin_M1 = 5;     //M1 Speed Control
+int speedPin_M2 = 6;     //M2 Speed Control
+
+int directionPin_M1 = 4;     //M1 Direction Control
+int directionPin_M2 = 7;     //M1 Direction Control
+
+int a = 5000;
+int s = 2500;
+int d = 1000;
+
+Servo servo1;
+
+void setup() {
+/**use speed and direction variables as output
+  Serial.begin(9600);
+  pinMode(speedPin_M1, OUTPUT);
+  pinMode(speedPin_M2, OUTPUT);
+  pinMode(directionPin_M1, OUTPUT);
+  pinMode(directionPin_M2, OUTPUT);
+
+  Serial.begin(9600);
+  Serial.println("Arduino is ready");
+ 
+  // HC-05 default serial speed for communication mode is 38400
+  //BTserial.begin(38400); 
+  BTserial.begin(9600); 
+  BTserial.println("Hello, World! ");
+  pinMode(BT_RX, INPUT);
+  pinMode(BT_TX, OUTPUT);
+
+  servo1.attach(8);
+
+  carStop();
+
+  servo1.write(110);
+}
+
+
+/**loop with switch statements
+*based on the key pressed on the app, the car will move with a certain speed in the specified direction. 
+*It will turn as many degrees necessary (amount of degrees turned for a full circle is 360)
+void loop(){
+  Serial.println(BTserial.available());
+  if (BTserial.available()) {
+    c = BTserial.read();
+    Serial.println(c);
+     
+    switch (c) {
+    case 'q':
+      carAdvance(255,255);
+      delay(a);
+      carStop();
+      break;
+    case 'w':
+      carAdvance(255,255);
+      delay(s);
+      carStop();
+      break;
+    case 'e':
+      carAdvance(255,255);
+      delay(d);
+      carStop();
+      break;
+    case 'z':
+      carBack(255,255);
+      delay(a);
+      carStop();
+      break;
+    case 'x':
+      carBack(255,255);
+      delay(s);
+      carStop();
+      break;
+    case 'c':
+      carBack(255,255);
+      delay(d);
+      carStop();
+      break;
+    case 'i':
+      carTurnLeft(255,255);
+      delay(4000);
+      carStop();
+      break;
+    case 'o':
+      carTurnLeft(255,255);
+      delay(2000);
+      carStop();
+      break;
+    case 'p':
+      carTurnLeft(255,255);
+      delay(1000);
+      carStop();
+      break;
+    case 'b':
+      carTurnRight(255,255);
+      delay(4000);
+      carStop();
+      break;
+    case 'n':
+      carTurnRight(255,255);
+      delay(2000);
+      carStop();
+      break;
+    case 'm':
+      carTurnRight(255,255);
+      delay(1000);
+      carStop();
+      break;
+    case 'l':
+      servo1.write(180);
+      delay(100);
+      servo1.write(110);
+    }
+  }
+    Serial.println("Bluetooth Test - m");
+    BTserial.println("Hello world!"); 
+    delay(200); 
+}
+//code for car to stop - make voltage values low
+void carStop(){
+  //  Motor Stop
+  digitalWrite(speedPin_M2,0); 
+  digitalWrite(directionPin_M1,LOW);  
+  digitalWrite(speedPin_M1,0);   
+  digitalWrite(directionPin_M2,LOW);    
+} 
+
+/** code to make the car move backward, move forward, turn left, and turn right
+*This is done by adjusting the voltage values for each pin
+void carBack(int leftSpeed,int rightSpeed){
+  //Move backward
+  analogWrite (speedPin_M2,leftSpeed);    //PWM Speed Control
+  digitalWrite(directionPin_M1,LOW);    
+  analogWrite (speedPin_M1,rightSpeed);  //PWM Speed Control
+  digitalWrite(directionPin_M2,HIGH);
+}
+
+void carAdvance(int leftSpeed,int rightSpeed){
+  //Move forward
+  analogWrite (speedPin_M2,leftSpeed);  //PWM Speed Control
+  digitalWrite(directionPin_M1,HIGH);   
+  analogWrite (speedPin_M1,rightSpeed);  //PWM Speed Control  
+  digitalWrite(directionPin_M2,LOW);
+}
+
+void carTurnLeft(int leftSpeed,int rightSpeed){      //Turn Left
+  analogWrite (speedPin_M2,leftSpeed);
+  digitalWrite(directionPin_M1,HIGH);    
+  analogWrite (speedPin_M1,rightSpeed);    
+  digitalWrite(directionPin_M2,HIGH);
+}
+
+void carTurnRight(int leftSpeed,int rightSpeed){      //Turn Right
+  analogWrite (speedPin_M2,leftSpeed);
+  digitalWrite(directionPin_M1,LOW);    
+  analogWrite (speedPin_M1,rightSpeed);    
+  digitalWrite(directionPin_M2,LOW);
+}
+
+
+
+
+
+
+
+
+
+
+
